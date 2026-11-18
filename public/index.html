@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>dclogger6777</title>
+
+    <style>
+        body {
+            background: #080808;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+            padding: 40px 15px;
+        }
+
+        .panel {
+            max-width: 450px;
+            margin: auto;
+            padding: 25px;
+            background: #171717;
+            border: 1px solid #e32640;
+            border-radius: 15px;
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        input, button {
+            padding: 12px;
+            margin: 8px;
+            border-radius: 8px;
+        }
+
+        button {
+            background: #e32640;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="panel">
+
+        <h1>dclogger6777</h1>
+
+        <!-- PUT YOUR IMAGE LINK HERE -->
+        <img
+            src="https://example.com/image.png"
+            alt="Display image"
+        >
+
+        <h3>Visitor information</h3>
+
+        <form id="visitForm">
+
+            <input
+                id="username"
+                placeholder="Roblox username (optional)"
+                maxlength="20"
+            >
+
+            <input
+                id="country"
+                placeholder="Country (optional)"
+                maxlength="80"
+            >
+
+            <p>
+                <label>
+                    <input
+                        type="checkbox"
+                        id="consent"
+                        required
+                    >
+                    I agree to send the information above
+                    to the website owner.
+                </label>
+            </p>
+
+            <button type="submit">
+                Continue
+            </button>
+
+        </form>
+
+        <p id="status"></p>
+
+    </div>
+
+    <script>
+        document.getElementById("visitForm")
+            .addEventListener("submit", async (event) => {
+
+            event.preventDefault();
+
+            const status = document.getElementById("status");
+
+            if (!document.getElementById("consent").checked) {
+                status.textContent = "Consent required.";
+                return;
+            }
+
+            status.textContent = "Sending...";
+
+            try {
+                const response = await fetch("/api/visit", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        consent: true,
+                        username: document.getElementById("username").value,
+                        country: document.getElementById("country").value
+                    })
+                });
+
+                status.textContent = response.ok
+                    ? "Notification sent!"
+                    : "Notification failed.";
+
+            } catch {
+                status.textContent = "Connection error.";
+            }
+        });
+    </script>
+</body>
+</html>
